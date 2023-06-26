@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import ReactPlayer from "react-player/youtube";
 import { BsFillCheckCircleFill } from "react-icons/bs";
@@ -7,7 +7,7 @@ import { abbreviateNumber } from "js-abbreviation-number";
 
 import { fetchDataFromApi } from "../utils/api";
 import { Context } from "../context/contextApi";
-import SuggestionVideoCard from "./SuggestionVideoCard";
+import SuggestionVideo from "./SuggestionVideo";
 
 const VideoDetails = () => {
     const [video, setVideo] = useState();
@@ -15,29 +15,29 @@ const VideoDetails = () => {
     const { id } = useParams();
     const { setLoading } = useContext(Context);
 
-    const fetchVideoDetails = useCallback(() => {
+    useEffect(() => {
+        document.getElementById("root").classList.add("custom-h");
+        fetchVideoDetails();
+        fetchRelatedVideos();
+    }, [id]);
+
+    const fetchVideoDetails = () => {
         setLoading(true);
         fetchDataFromApi(`video/details/?id=${id}`).then((res) => {
             console.log(res);
             setVideo(res);
             setLoading(false);
         });
-    }, [id, setLoading]);
+    };
 
-    const fetchRelatedVideos = useCallback(() => {
+    const fetchRelatedVideos = () => {
         setLoading(true);
         fetchDataFromApi(`video/related-contents/?id=${id}`).then((res) => {
             console.log(res);
             setRelatedVideos(res);
             setLoading(false);
         });
-    }, [id, setLoading]);
-
-    useEffect(() => {
-        document.getElementById("root").classList.add("custom-h");
-        fetchVideoDetails();
-        fetchRelatedVideos();
-    }, [id, fetchVideoDetails, fetchRelatedVideos]);
+    };
 
     return (
         <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-black">
@@ -61,8 +61,7 @@ const VideoDetails = () => {
                             <div className="flex items-start">
                                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                                     <img
-                                        alt=""
-                                        className="h-full w-full object-cover"
+                                        className="h-full w-full object-cover" alt=""
                                         src={video?.author?.avatar[0]?.url}
                                     />
                                 </div>
@@ -101,7 +100,7 @@ const VideoDetails = () => {
                     {relatedVideos?.contents?.map((item, index) => {
                         if (item?.type !== "video") return false;
                         return (
-                            <SuggestionVideoCard
+                            <SuggestionVideo
                                 key={index}
                                 video={item?.video}
                             />

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
 import LeftNavMenuItem from "./LeftNavMenuItem";
 import { categories } from "../utils/constants";
 import { Context } from "../context/contextApi";
@@ -54,7 +53,9 @@ const LeftNav = () => {
                     );
                 })}
                 <hr className="my-5 border-white/[0.2]" />
-                
+                <div className="text-white/[0.5] text-[12px]">
+                    Clone by: Nikhil Chauhan
+                </div>
             </div>
         </div>
     );
